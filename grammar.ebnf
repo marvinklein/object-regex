@@ -1,0 +1,48 @@
+Regex ::= AnchorStartOfString? Expression
+Expression ::= Subexpression ("|" Expression)?
+
+/* Anything that can be on one side of the alternation. */
+Subexpression ::= SubexpressionItem+
+SubexpressionItem
+  ::= Match
+    | Group
+    | Anchor
+  
+/* Grouping Constructs */
+
+Group ::= "(" GroupNonCapturingModifier? Expression ")" Quantifier?
+GroupNonCapturingModifier ::= "?:"
+
+/* Token Matches */
+
+Match ::= Token Quantifier?
+Token
+  ::= MatchAnyToken
+    | MatchTokenNegativeModifier? MatchToken
+MatchAnyToken ::= "."
+MatchTokenNegativeModifier ::= "^"
+
+/* Quantifiers */
+Quantifier ::= QuantifierType LazyModifier?
+QuantifierType
+  ::= ZeroOrMoreQuantifier
+    | OneOrMoreQuantifier
+    | ZeroOrOneQuantifier
+    | RangeQuantifier
+
+LazyModifier ::= "?"
+
+ZeroOrMoreQuantifier ::= "*"
+OneOrMoreQuantifier ::= "+"
+ZeroOrOneQuantifier ::= "?"
+
+RangeQuantifier ::= "{" Integer ( "," Integer? )? "}"
+
+/* Anchors */
+
+AnchorStartOfString ::= "^"
+
+Anchor
+  ::= AnchorEndOfString
+
+AnchorEndOfString ::= "$"
